@@ -1,5 +1,8 @@
 const express = require('express')
 const pg = require('pg')
+const rateLimiter = require('./rateLimiter');
+
+require('dotenv').config()
 
 const app = express()
 // configs come from standard PostgreSQL env vars
@@ -11,6 +14,9 @@ const queryHandler = (req, res, next) => {
     return res.json(r.rows || [])
   }).catch(next)
 }
+
+//Use rate limiter to all endpoints
+app.use(rateLimiter);
 
 app.get('/', (req, res) => {
   res.send('Welcome to EQ Works 😎')
